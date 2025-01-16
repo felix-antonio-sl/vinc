@@ -24,30 +24,27 @@ data DocumentNode = DocumentNode
   { content :: Text
   }
 
+-- Actualizar la configuración para asegurar la conexión correcta
+defaultConfig :: Neo4jConfig
+defaultConfig = Neo4jConfig
+    { uri = "bolt://localhost:7687"    -- Cambiado de 0.0.0.0 a localhost
+    , user = "neo4j"
+    , password = "password"
+    }
+
 -- Función para conectar a Neo4j usando Hasbolt
 connectDB :: MonadIO m => Neo4jConfig -> m Bolt.Pipe
 connectDB config = liftIO $ do
-  let uriStr = uri config
-  case parseURI uriStr of
-    Just (URI { uriScheme = scheme, uriAuthority = Just auth }) ->
-      if scheme /= "bolt:" 
-        then error "La URI debe comenzar con 'bolt://'"
-        else do
-          let host = uriRegName auth
-              portStr = drop 1 (uriPort auth)
-              port = case portStr of
-                      "" -> 7687
-                      str -> case readMaybe str of
-                              Just p  -> p
-                              Nothing -> error $ "Puerto inválido en la URI de Neo4j: " ++ str
-          pipe <- Bolt.connect $ def
-            { Bolt.user     = T.pack (user config)
-            , Bolt.password = T.pack (password config)
-            , Bolt.host     = host
-            , Bolt.port     = port
-            }
-          return pipe
-    _ -> error "URI de Neo4j inválida. Debe tener el formato 'bolt://host:port'"
+    putStrLn $ "Intentando conectar a Neo4j 5.26.0 en: " ++ uri config
+    pipe <- Bolt.connect $ def
+        { Bolt.host = "localhost"
+        , Bolt.port = 7687
+        , Bolt.user = T.pack (user config)
+        , Bolt.password = T.pack (password config)
+        , Bolt.version = Bolt.V5_0     -- Actualizado para Neo4j 5.x
+        }
+    putStrLn "Conexión establecida con Neo4j"
+    return pipe
 
 -- Función para ejecutar una consulta Cypher y devolver líneas de texto
 runCypher ::

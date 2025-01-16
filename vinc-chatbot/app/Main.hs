@@ -38,8 +38,11 @@ instance FromJSON ChatResponse
 
 main :: IO ()
 main = do
+    putStrLn "Iniciando servidor VINC chatbot..."
+    
     -- Cargar variables de entorno desde .env
     Dotenv.loadFile Dotenv.defaultConfig
+    putStrLn "Variables de entorno cargadas"
 
     -- Obtener variables de entorno
     portStr <- getEnv "PORT" `catch` handleMissing "PORT"
@@ -64,17 +67,25 @@ main = do
 
         S.post "/chat" $ do
             chatReq <- S.jsonData
-            let initialContext = Bot.ChatContext
-                    { Bot.sessionId = reqSessionId chatReq
-                    , Bot.history = []
-                    , Bot.relevantDocs = []
-                    }
-            (response, newCtx) <- S.liftIO $ 
-                Bot.processMessage botConfig initialContext (userMessage chatReq)
+            result <- S.liftIO $ catch 
+                (do
+                    let initialContext = Bot.ChatContext
+                            { Bot.sessionId = reqSessionId chatReq
+                            , Bot.history = []
+                            , Bot.relevantDocs = []
+                            }
+                    Bot.processMessage botConfig initialContext (userMessage chatReq)
+                )
+                (\e -> do
+                    putStrLn $ "Error de conexión: " ++ show (e :: SomeException)
+                    return ("Error al procesar el mensaje. Por favor, intente más tarde.", initialContext)
+                )
             S.json ChatResponse
-                { botMessage = response
-                , respSessionId = Bot.sessionId newCtx
+                { botMessage = fst result
+                , respSessionId = Bot.sessionId (snd result)
                 } 
+
+    putStrLn $ "Servidor escuchando en puerto " ++ show port
 
 -- Manejar variables de entorno faltantes
 handleMissing :: String -> SomeException -> IO String
