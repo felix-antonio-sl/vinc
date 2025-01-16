@@ -41,7 +41,7 @@ connectDB config = liftIO $ do
         , Bolt.port = 7687
         , Bolt.user = T.pack (user config)
         , Bolt.password = T.pack (password config)
-        , Bolt.version = Bolt.V5_0     -- Actualizado para Neo4j 5.x
+        , Bolt.version = Bolt.V4_4
         }
     putStrLn "Conexión establecida con Neo4j"
     return pipe
