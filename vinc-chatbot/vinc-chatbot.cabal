@@ -19,7 +19,7 @@ executable vinc-chatbot
                     , Bot.OpenAI
                     , Database.Neo4j
                     , Api.Schema
-    build-depends:    base ^>=4.16.4.0
+    build-depends:    base >= 4.16 && < 5
                     , scotty
                     , aeson
                     , text
