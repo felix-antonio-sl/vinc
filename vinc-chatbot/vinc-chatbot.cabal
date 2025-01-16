@@ -29,6 +29,7 @@ executable vinc-chatbot
     , bytestring
     , containers
     , data-default-class
+    , dotenv
     , hasbolt
     , http-conduit
     , morpheus-graphql
@@ -37,6 +38,7 @@ executable vinc-chatbot
     , openai-hs
     , scotty
     , text
+    , transformers
     , wai-cors
     , warp
 

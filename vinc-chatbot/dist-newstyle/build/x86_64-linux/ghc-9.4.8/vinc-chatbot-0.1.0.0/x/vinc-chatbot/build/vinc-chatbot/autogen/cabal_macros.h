@@ -60,6 +60,16 @@
   (major1) == 0 && (major2) <  1 || \
   (major1) == 0 && (major2) == 1 && (minor) <= 2)
 #endif /* MIN_VERSION_data_default_class */
+/* package dotenv-0.12.0.0 */
+#ifndef VERSION_dotenv
+#define VERSION_dotenv "0.12.0.0"
+#endif /* VERSION_dotenv */
+#ifndef MIN_VERSION_dotenv
+#define MIN_VERSION_dotenv(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  12 || \
+  (major1) == 0 && (major2) == 12 && (minor) <= 0)
+#endif /* MIN_VERSION_dotenv */
 /* package hasbolt-0.1.7.0 */
 #ifndef VERSION_hasbolt
 #define VERSION_hasbolt "0.1.7.0"
@@ -140,6 +150,16 @@
   (major1) == 1 && (major2) <  2 || \
   (major1) == 1 && (major2) == 2 && (minor) <= 5)
 #endif /* MIN_VERSION_text */
+/* package transformers-0.5.6.2 */
+#ifndef VERSION_transformers
+#define VERSION_transformers "0.5.6.2"
+#endif /* VERSION_transformers */
+#ifndef MIN_VERSION_transformers
+#define MIN_VERSION_transformers(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  5 || \
+  (major1) == 0 && (major2) == 5 && (minor) <= 6)
+#endif /* MIN_VERSION_transformers */
 /* package wai-cors-0.2.7 */
 #ifndef VERSION_wai_cors
 #define VERSION_wai_cors "0.2.7"
