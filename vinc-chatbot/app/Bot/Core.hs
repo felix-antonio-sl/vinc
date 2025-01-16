@@ -8,7 +8,7 @@ import Data.Text (Text)
 import qualified Database.Neo4j as DB
 import qualified Bot.OpenAI as OpenAI
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Data.Aeson (Object)
+import Data.Aeson ()
 
 -- Tipos de datos para el chatbot
 data ChatContext = ChatContext

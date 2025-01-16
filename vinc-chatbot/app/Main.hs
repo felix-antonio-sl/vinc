@@ -11,17 +11,16 @@ import System.Environment (getEnv)
 import qualified Bot.Core as Bot
 import qualified Bot.OpenAI as OpenAI
 import qualified Database.Neo4j as Neo4j
-import qualified Data.Text.Lazy as T
 import qualified Data.Text as Text
 
 data ChatRequest = ChatRequest 
-    { userMessage :: T.Text
-    , sessionId :: T.Text 
+    { userMessage :: Text.Text
+    , reqSessionId :: Text.Text
     } deriving (Generic, Show)
 
 data ChatResponse = ChatResponse
-    { botMessage :: T.Text
-    , sessionId :: T.Text
+    { botMessage :: Text.Text
+    , respSessionId :: Text.Text
     } deriving (Generic, Show)
 
 instance ToJSON ChatRequest
@@ -39,9 +38,9 @@ main = do
 
     let botConfig = Bot.BotConfig
             { Bot.openAIConfig = OpenAI.defaultConfig openaiKey
-            , Bot.dbConfig = Neo4j.Config 
+            , Bot.dbConfig = Neo4j.Neo4jConfig 
                 { Neo4j.uri = neo4jUri
-                , Neo4j.username = neo4jUser
+                , Neo4j.user = neo4jUser
                 , Neo4j.password = neo4jPass
                 }
             }
@@ -52,13 +51,13 @@ main = do
         S.post "/chat" $ do
             chatReq <- S.jsonData
             let initialContext = Bot.ChatContext
-                    { Bot.sessionId = sessionId chatReq
+                    { Bot.sessionId = reqSessionId chatReq
                     , Bot.history = []
                     , Bot.relevantDocs = []
                     }
-            (response, newCtx) <- S.liftAndCatchIO $ 
+            (response, newCtx) <- S.liftIO $ 
                 Bot.processMessage botConfig initialContext (userMessage chatReq)
             S.json ChatResponse
                 { botMessage = response
-                , sessionId = Bot.sessionId newCtx
+                , respSessionId = Bot.sessionId newCtx
                 } 
