@@ -12,13 +12,10 @@ import qualified Bot.Core as Bot
 import qualified Bot.OpenAI as OpenAI
 import qualified Database.Neo4j as Neo4j
 import qualified Data.Text as Text
-import System.Environment (lookupEnv)
 import Control.Monad (when)
 import Control.Monad.IO.Class (liftIO)
 import qualified System.IO as IO
-import qualified System.Environment as Env
 import Control.Exception (catch, SomeException)
-import Control.Monad.Trans.Except (runExceptT)
 import qualified Configuration.Dotenv as Dotenv
 
 data ChatRequest = ChatRequest 
@@ -55,12 +52,15 @@ main = do
 
     let botConfig = Bot.BotConfig
             { Bot.openAIConfig = OpenAI.defaultConfig openaiKey
-            , Bot.dbConfig = Neo4j.Neo4jConfig 
+            , Bot.dbConfig = Neo4j.defaultConfig 
                 { Neo4j.uri = neo4jUri
                 , Neo4j.user = neo4jUser
                 , Neo4j.password = neo4jPass
                 }
             }
+
+    -- Inicializar el bot
+    initialCtx <- Bot.initBot botConfig
 
     S.scotty port $ do
         S.middleware simpleCors
@@ -69,21 +69,16 @@ main = do
             chatReq <- S.jsonData
             result <- S.liftIO $ catch 
                 (do
-                    let initialContext = Bot.ChatContext
-                            { Bot.sessionId = reqSessionId chatReq
-                            , Bot.history = []
-                            , Bot.relevantDocs = []
-                            }
-                    Bot.processMessage botConfig initialContext (userMessage chatReq)
+                    Bot.processMessage botConfig initialCtx (userMessage chatReq)
                 )
                 (\e -> do
-                    putStrLn $ "Error de conexión: " ++ show (e :: SomeException)
-                    return ("Error al procesar el mensaje. Por favor, intente más tarde.", initialContext)
+                    putStrLn $ "Error inesperado: " ++ show (e :: SomeException)
+                    return ("Error al procesar el mensaje. Por favor, intente más tarde.", initialCtx)
                 )
             S.json ChatResponse
                 { botMessage = fst result
                 , respSessionId = Bot.sessionId (snd result)
-                } 
+                }
 
     putStrLn $ "Servidor escuchando en puerto " ++ show port
 
