@@ -100,6 +100,16 @@
   (major1) == 2 && (major2) <  2 || \
   (major1) == 2 && (major2) == 2 && (minor) <= 2)
 #endif /* MIN_VERSION_mtl */
+/* package network-uri-2.6.4.2 */
+#ifndef VERSION_network_uri
+#define VERSION_network_uri "2.6.4.2"
+#endif /* VERSION_network_uri */
+#ifndef MIN_VERSION_network_uri
+#define MIN_VERSION_network_uri(major1,major2,minor) (\
+  (major1) <  2 || \
+  (major1) == 2 && (major2) <  6 || \
+  (major1) == 2 && (major2) == 6 && (minor) <= 4)
+#endif /* MIN_VERSION_network_uri */
 /* package openai-hs-0.3.0.1 */
 #ifndef VERSION_openai_hs
 #define VERSION_openai_hs "0.3.0.1"

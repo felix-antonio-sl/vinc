@@ -8,12 +8,16 @@ import qualified Data.Map as M
 import qualified Database.Bolt as Bolt
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.Default.Class (Default(..))
-import Data.Maybe (mapMaybe)
+import Data.Maybe (catMaybes)
+import Network.URI (parseURI, URI(..), URIAuth(..))
+import Text.Read (readMaybe)
 
 -- Configuración de Neo4j
 data Neo4jConfig = Neo4jConfig
-  { uri :: String
-  }
+  { uri      :: String
+  , user     :: String
+  , password :: String
+  } deriving (Show)
 
 -- Representación de un nodo de documento
 data DocumentNode = DocumentNode
@@ -22,34 +26,48 @@ data DocumentNode = DocumentNode
 
 -- Función para conectar a Neo4j usando Hasbolt
 connectDB :: MonadIO m => Neo4jConfig -> m Bolt.Pipe
-connectDB _config = liftIO $ do
-  pipe <- Bolt.connect $ def
-    { Bolt.user = "neo4j"
-    , Bolt.password = "password"
-    , Bolt.host = "localhost"
-    , Bolt.port = 7687
-    }
-  return pipe
+connectDB config = liftIO $ do
+  let uriStr = uri config
+  case parseURI uriStr of
+    Just (URI { uriScheme = scheme, uriAuthority = Just auth }) ->
+      if scheme /= "bolt:" 
+        then error "La URI debe comenzar con 'bolt://'"
+        else do
+          let host = uriRegName auth
+              portStr = drop 1 (uriPort auth)
+              port = case portStr of
+                      "" -> 7687
+                      str -> case readMaybe str of
+                              Just p  -> p
+                              Nothing -> error $ "Puerto inválido en la URI de Neo4j: " ++ str
+          pipe <- Bolt.connect $ def
+            { Bolt.user     = T.pack (user config)
+            , Bolt.password = T.pack (password config)
+            , Bolt.host     = host
+            , Bolt.port     = port
+            }
+          return pipe
+    _ -> error "URI de Neo4j inválida. Debe tener el formato 'bolt://host:port'"
 
 -- Función para ejecutar una consulta Cypher y devolver líneas de texto
 runCypher ::
   MonadIO m =>
   Bolt.Pipe ->
-  Text ->               -- Consulta Cypher
-  [(Text, Bolt.Value)] ->  -- Parámetros en forma de lista
+  Text ->
+  [(Text, Bolt.Value)] ->
   m [Text]
 runCypher pipe cypher paramsList = do
-  -- Convertimos la lista ‘[(Text, Bolt.Value)]’ a ‘Map Text Bolt.Value’
   let paramMap = M.fromList paramsList
-  -- Usamos ‘Bolt.run pipe’ para ejecutar la acción de Hasbolt ‘queryP’
   records <- liftIO . Bolt.run pipe $ Bolt.queryP cypher paramMap
-  return $ mapMaybe (extractContent "d.content") records
+  maybeVals <- liftIO $ mapM extractContent records -- IO [Maybe Text]
+  return (catMaybes maybeVals)                     -- Filtramos Nothing
   where
-    extractContent :: Text -> Bolt.Record -> Maybe Text
-    extractContent field rec =
-      case rec `Bolt.at` field of
-        Right (Bolt.T txt) -> Just txt
-        _                  -> Nothing
+    extractContent :: Bolt.Record -> IO (Maybe Text)
+    extractContent rec = do
+      val <- Bolt.run pipe (rec `Bolt.at` "d.content")
+      case val of
+        Bolt.T txt -> return (Just txt)
+        _          -> return Nothing
 
 -- Función de ejemplo para filtrar documentos relevantes
 getContextForQuery :: MonadIO m => Bolt.Pipe -> Text -> m [Text]

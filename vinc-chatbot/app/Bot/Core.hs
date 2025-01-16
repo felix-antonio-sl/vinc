@@ -42,10 +42,12 @@ initBot config = do
 processMessage :: MonadIO m => BotConfig -> ChatContext -> Text -> m (Text, ChatContext)
 processMessage config ctx message = do
   -- 1. Establecer conexión con Neo4j
-  pipe <- liftIO $ DB.connect (dbConfig config)
+  pipe <- liftIO $ DB.connectDB (dbConfig config)
   
   -- 2. Buscar documentos relevantes en Neo4j
-  docs <- DB.getContextForQuery pipe message
+  textDocs <- DB.getContextForQuery pipe message
+  -- Convertir los resultados de texto en DocumentNodes
+  let docs = map (\text -> DB.DocumentNode { DB.content = text }) textDocs
   
   -- 3. Preparar contexto para OpenAI
   let prompt = preparePrompt ctx docs message
@@ -59,12 +61,12 @@ processMessage config ctx message = do
   return (response, newCtx)
 
 -- Funciones auxiliares
-preparePrompt :: ChatContext -> [Text] -> Text -> Text
+preparePrompt :: ChatContext -> [DB.DocumentNode] -> Text -> Text
 preparePrompt ChatContext{..} docs userMessage =
   T.unlines
     [ "Eres un asistente especializado en el Concurso VINC 8% 2024."
     , "Contexto relevante:"
-    , T.unlines docs
+    , T.unlines (map DB.content docs)
     , "Historial de conversación:"
     , formatHistory history
     , "Usuario: " <> userMessage
@@ -75,9 +77,9 @@ formatHistory = T.unlines . map formatMessage
   where
     formatMessage ChatMessage{..} = role <> ": " <> content
 
+-- Función para actualizar el contexto (asume que existe)
 updateContext :: ChatContext -> Text -> Text -> [DB.DocumentNode] -> ChatContext
-updateContext ctx userMsg botResp docs =
-  ctx
-    { history = history ctx ++ [ChatMessage "Usuario" userMsg, ChatMessage "Bot" botResp]
-    , relevantDocs = docs
-    } 
+updateContext ctx msg resp docs =
+  ctx { history = history ctx ++ [ChatMessage "Usuario" msg, ChatMessage "Bot" resp]
+      , relevantDocs = docs
+      } 

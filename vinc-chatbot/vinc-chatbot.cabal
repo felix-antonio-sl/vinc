@@ -1,38 +1,45 @@
-cabal-version:      3.0
-name:               vinc-chatbot
-version:            0.1.0.0
-synopsis:           Chatbot informativo para VINC 8% 2024
-description:        Chatbot web para asistir en la rendición de cuentas del concurso VINC 8% 2024
-license:            BSD-3-Clause
-author:             Gobierno Regional de Ñuble
-maintainer:         soporte@goredenuble.cl
-category:           Web
-build-type:         Simple
+cabal-version: 3.0
+name:          vinc-chatbot
+version:       0.1.0.0
+synopsis:      Chatbot informativo para VINC 8% 2024
+description:
+  Chatbot web para asistir en la rendición de cuentas del concurso VINC 8% 2024
+
+license:       BSD-3-Clause
+author:        Gobierno Regional de Ñuble
+maintainer:    soporte@goredenuble.cl
+category:      Web
+build-type:    Simple
 
 common warnings
-    ghc-options: -Wall
+  ghc-options: -Wall
 
 executable vinc-chatbot
-    import:           warnings
-    main-is:          Main.hs
-    other-modules:    Bot.Core
-                    , Bot.OpenAI
-                    , Database.Neo4j
-                    , Api.Schema
-    build-depends:    base >= 4.16 && < 5
-                    , scotty
-                    , aeson
-                    , text
-                    , wai-cors
-                    , warp
-                    , morpheus-graphql
-                    , hasbolt
-                    , openai-hs
-                    , bytestring
-                    , containers
-                    , mtl
-                    , http-conduit
-                    , data-default-class
-    hs-source-dirs:   app
-    default-language: Haskell2010
-    ghc-options:      -threaded 
+  import:           warnings
+  main-is:          Main.hs
+  other-modules:
+    Api.Schema
+    Bot.Core
+    Bot.OpenAI
+    Database.Neo4j
+
+  build-depends:
+    , aeson
+    , base                >=4.16 && <5
+    , bytestring
+    , containers
+    , data-default-class
+    , hasbolt
+    , http-conduit
+    , morpheus-graphql
+    , mtl
+    , network-uri
+    , openai-hs
+    , scotty
+    , text
+    , wai-cors
+    , warp
+
+  hs-source-dirs:   app
+  default-language: Haskell2010
+  ghc-options:      -threaded

@@ -8,75 +8,57 @@ import Network.Wai.Middleware.Cors
 import Data.Aeson (ToJSON, FromJSON)
 import GHC.Generics
 import System.Environment (getEnv)
-import qualified Database.Neo4j as Neo4j
-import qualified OpenAI
 import qualified Bot.Core as Bot
 import qualified Bot.OpenAI as OpenAI
-import Control.Monad.IO.Class (liftIO)
-import Data.Text.Lazy (Text)
-import qualified Data.Text as T
+import qualified Database.Neo4j as Neo4j
+import qualified Data.Text.Lazy as T
+import qualified Data.Text as Text
 
--- Configuración
-data AppConfig = AppConfig
-  { neo4jUri :: String
-  , openaiKey :: String
-  , port :: Int
-  } deriving (Show)
+data ChatRequest = ChatRequest 
+    { userMessage :: T.Text
+    , sessionId :: T.Text 
+    } deriving (Generic, Show)
 
--- Inicializar configuración
-initConfig :: IO AppConfig
-initConfig = do
-  neo4jUri <- getEnv "VINC_NEO4J_URI"
-  openaiKey <- getEnv "VINC_OPENAI_KEY"
-  port <- read <$> getEnv "VINC_PORT"
-  return $ AppConfig neo4jUri openaiKey port
-
--- Tipo de datos para recibir mensajes
-data ChatRequest = ChatRequest
-  { userMessage :: Text
-  , sessionId :: Text
-  } deriving (Show, Generic)
-
-instance FromJSON ChatRequest
-
--- Tipo de datos para responder al usuario
 data ChatResponse = ChatResponse
-  { botMessage :: Text
-  , sessionId :: Text
-  } deriving (Show, Generic)
+    { botMessage :: T.Text
+    , sessionId :: T.Text
+    } deriving (Generic, Show)
 
-instance ToJSON ChatResponse
+instance ToJSON ChatRequest
+instance FromJSON ChatRequest
+instance ToJSON ChatResponse 
+instance FromJSON ChatResponse
 
 main :: IO ()
 main = do
-  config <- initConfig
-  putStrLn $ "Iniciando servidor en puerto " ++ show (port config)
-  
-  -- Configuración de BotConfig
-  let botConfig = Bot.BotConfig
-        { dbConfig = Neo4j.Neo4jConfig { uri = neo4jUri config }
-        , openAIConfig = OpenAI.defaultConfig (T.pack $ openaiKey config)
-        }
+    port <- read <$> getEnv "PORT"
+    openaiKey <- Text.pack <$> getEnv "OPENAI_API_KEY"
+    neo4jUri <- getEnv "NEO4J_URI"
+    neo4jUser <- getEnv "NEO4J_USER" 
+    neo4jPass <- getEnv "NEO4J_PASSWORD"
 
-  S.scotty (port config) $ do
-    -- Configurar CORS
-    S.middleware simpleCors
-    
-    -- Ruta principal
-    S.get "/" $ do
-      S.text "VINC Chatbot API v1.0"
-    
-    -- Ruta para consultas del chatbot
-    S.post "/api/chat" $ do
-      chatReq <- S.jsonData :: S.ActionM ChatRequest
-      let userMsg = userMessage chatReq
-          sessId = sessionId chatReq
-      
-      -- Inicializar o recuperar el contexto de la sesión
-      ctx <- liftIO $ Bot.initBot botConfig
-      
-      -- Procesar el mensaje
-      (response, newCtx) <- liftIO $ Bot.processMessage botConfig ctx (T.unpack userMsg)
-      
-      -- Responder al usuario
-      S.json $ ChatResponse (T.pack response) sessId 
+    let botConfig = Bot.BotConfig
+            { Bot.openAIConfig = OpenAI.defaultConfig openaiKey
+            , Bot.dbConfig = Neo4j.Config 
+                { Neo4j.uri = neo4jUri
+                , Neo4j.username = neo4jUser
+                , Neo4j.password = neo4jPass
+                }
+            }
+
+    S.scotty port $ do
+        S.middleware simpleCors
+
+        S.post "/chat" $ do
+            chatReq <- S.jsonData
+            let initialContext = Bot.ChatContext
+                    { Bot.sessionId = sessionId chatReq
+                    , Bot.history = []
+                    , Bot.relevantDocs = []
+                    }
+            (response, newCtx) <- S.liftAndCatchIO $ 
+                Bot.processMessage botConfig initialContext (userMessage chatReq)
+            S.json ChatResponse
+                { botMessage = response
+                , sessionId = Bot.sessionId newCtx
+                } 
