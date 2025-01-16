@@ -1,0 +1,97 @@
+# Haskell
+dist
+dist-*
+cabal-dev
+*.o
+*.hi
+*.hie
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+.hpc
+.hsenv
+.cabal-sandbox/
+cabal.sandbox.config
+*.prof
+*.aux
+*.hp
+*.eventlog
+.stack-work/
+cabal.project.local
+cabal.project.local~
+.HTF/
+.ghc.environment.*
+
+# Elm
+elm-stuff/
+# elm-package generated files
+elm.json
+elm-package.json
+# elm-repl generated files
+repl-temp-*
+
+# Neo4j
+data/
+data/databases/
+data/dbms/
+logs/
+import/
+plugins/
+conf/
+
+# Node (para GraphQL y otras dependencias)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OpenAI API
+.env
+.env.local
+.env.*.local
+*apikey*
+*api_key*
+
+# IDE/Editores
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de compilación y build
+/dist/
+/build/
+/out/
+*.beam
+
+# Archivos de caché
+.cache/
+.npm/
+.eslintcache
+
+# Archivos temporales
+tmp/
+temp/
+
+# Archivos de testing y coverage
+/coverage/
+.nyc_output/
+
+# GraphQL generados
+*.generated.ts
+*.generated.js
+schema.graphql
+schema.json
+
+# Archivos de configuración local
+*.local
+config.local.* 
