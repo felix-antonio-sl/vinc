@@ -95,3 +95,4 @@ schema.json
 # Archivos de configuración local
 *.local
 config.local.* vinc-chatbot/.env
+vinc-chatbot/dist-newstyle
