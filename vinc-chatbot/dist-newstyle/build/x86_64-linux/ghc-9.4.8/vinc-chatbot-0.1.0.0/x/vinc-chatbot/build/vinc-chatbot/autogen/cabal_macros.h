@@ -50,6 +50,16 @@
   (major1) == 0 && (major2) <  6 || \
   (major1) == 0 && (major2) == 6 && (minor) <= 7)
 #endif /* MIN_VERSION_containers */
+/* package data-default-class-0.1.2.2 */
+#ifndef VERSION_data_default_class
+#define VERSION_data_default_class "0.1.2.2"
+#endif /* VERSION_data_default_class */
+#ifndef MIN_VERSION_data_default_class
+#define MIN_VERSION_data_default_class(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  1 || \
+  (major1) == 0 && (major2) == 1 && (minor) <= 2)
+#endif /* MIN_VERSION_data_default_class */
 /* package hasbolt-0.1.7.0 */
 #ifndef VERSION_hasbolt
 #define VERSION_hasbolt "0.1.7.0"

@@ -3,6 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE StandaloneDeriving #-}
 
 module Api.Schema where
 
@@ -22,15 +23,6 @@ data ChatResponse = ChatResponse
   , suggestions :: [Text]
   } deriving (Generic)
 
--- Resolvers
-rootResolver :: RootResolver IO () Query Mutation Undefined
-rootResolver =
-  RootResolver
-    { queryResolver = Query {..}
-    , mutationResolver = Mutation {..}
-    , subscriptionResolver = Undefined
-    }
-
 -- Query
 data Query m = Query
   { chatHistory :: ChatArgs -> m [ChatResponse]
@@ -45,8 +37,20 @@ data Mutation m = Mutation
   { sendMessage :: ChatInput -> m ChatResponse
   } deriving (Generic)
 
--- instance Monad m => MapAPI Query m where
---   type API Query m = API Query m
-
--- instance Monad m => MapAPI Mutation m where
---   type API Mutation m = API Mutation m 
+-- Resolvers
+rootResolver :: RootResolver IO () Query Mutation Undefined
+rootResolver =
+  RootResolver
+    { queryResolver = Query
+        { chatHistory = \ChatArgs{} -> pure [] -- Implementar la lógica
+        }
+    , mutationResolver = Mutation
+        { sendMessage = \ChatInput{} ->
+            pure ChatResponse
+              { response = "Respuesta de prueba"
+              , context = []
+              , suggestions = []
+              }
+        }
+    , subscriptionResolver = undefined
+    }

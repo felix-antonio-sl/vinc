@@ -5,11 +5,10 @@
 module Bot.OpenAI where
 
 import Data.Text (Text)
-import qualified Data.Text as T
+import Data.Text.Encoding (encodeUtf8)
 import Data.Aeson
 import GHC.Generics
 import Network.HTTP.Simple
-import qualified Data.ByteString.Lazy as BL
 import Control.Monad.IO.Class (MonadIO, liftIO)
 
 -- Configuración
