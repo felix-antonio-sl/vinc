@@ -94,4 +94,4 @@ schema.json
 
 # Archivos de configuración local
 *.local
-config.local.* 
+config.local.* vinc-chatbot/.env
