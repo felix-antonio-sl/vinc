@@ -41,17 +41,19 @@ initBot config = do
 -- Procesar mensaje
 processMessage :: MonadIO m => BotConfig -> ChatContext -> Text -> m (Text, ChatContext)
 processMessage config ctx message = do
-  -- 1. Buscar documentos relevantes en Neo4j
-  let dbPipe = undefined -- TODO: Manejar conexión Neo4j
-  docs <- DB.getContextForQuery dbPipe message
+  -- 1. Establecer conexión con Neo4j
+  pipe <- liftIO $ DB.connect (dbConfig config)
   
-  -- 2. Preparar contexto para OpenAI
+  -- 2. Buscar documentos relevantes en Neo4j
+  docs <- DB.getContextForQuery pipe message
+  
+  -- 3. Preparar contexto para OpenAI
   let prompt = preparePrompt ctx docs message
   
-  -- 3. Obtener respuesta de OpenAI
+  -- 4. Obtener respuesta de OpenAI
   response <- OpenAI.getCompletion (openAIConfig config) prompt
   
-  -- 4. Actualizar contexto
+  -- 5. Actualizar contexto
   let newCtx = updateContext ctx message response docs
   
   return (response, newCtx)
@@ -73,10 +75,9 @@ formatHistory = T.unlines . map formatMessage
   where
     formatMessage ChatMessage{..} = role <> ": " <> content
 
-updateContext :: ChatContext -> Text -> Text -> [Text] -> ChatContext
-updateContext ctx@ChatContext{..} userMsg botResponse _ =
-  ctx { history = history ++ 
-          [ ChatMessage "user" userMsg
-          , ChatMessage "assistant" botResponse
-          ]
-      } 
+updateContext :: ChatContext -> Text -> Text -> [DB.DocumentNode] -> ChatContext
+updateContext ctx userMsg botResp docs =
+  ctx
+    { history = history ctx ++ [ChatMessage "Usuario" userMsg, ChatMessage "Bot" botResp]
+    , relevantDocs = docs
+    } 

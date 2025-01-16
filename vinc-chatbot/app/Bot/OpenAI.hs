@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Bot.OpenAI where
 
@@ -58,18 +59,18 @@ getCompletion Config{..} prompt = do
         , modelName = model
         , temp = temperature
         }
-  
+
   response <- liftIO $ do
     initReq <- parseRequest "POST https://api.openai.com/v1/chat/completions"
     let req = setRequestBodyJSON request
-            $ addRequestHeader "Authorization" ("Bearer " <> T.encodeUtf8 apiKey)
+            $ addRequestHeader "Authorization" ("Bearer " <> encodeUtf8 apiKey)
             $ setRequestHeader "Content-Type" ["application/json"]
-            initReq
+            $ initReq
     
     httpJSON req
-  
-  let ChatResponse choices = getResponseBody response
-  return $ content . message $ head choices
+
+  let ChatResponse choicesList = getResponseBody response
+  return $ content . message $ head choicesList
 
 -- Configuración por defecto
 defaultConfig :: Text -> Config
@@ -77,4 +78,4 @@ defaultConfig key = Config
   { apiKey = key
   , model = "gpt-4o"
   , temperature = 0
-  } 
+  }

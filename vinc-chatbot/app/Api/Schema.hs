@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Api.Schema where
 
@@ -44,8 +45,8 @@ data Mutation m = Mutation
   { sendMessage :: ChatInput -> m ChatResponse
   } deriving (Generic)
 
-instance Monad m => MapAPI Query m where
-  type API Query m = API Query m
+-- instance Monad m => MapAPI Query m where
+--   type API Query m = API Query m
 
-instance Monad m => MapAPI Mutation m where
-  type API Mutation m = API Mutation m 
+-- instance Monad m => MapAPI Mutation m where
+--   type API Mutation m = API Mutation m 
