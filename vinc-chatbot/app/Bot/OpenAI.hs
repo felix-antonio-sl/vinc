@@ -75,6 +75,6 @@ getCompletion Config{..} prompt = do
 defaultConfig :: Text -> Config
 defaultConfig key = Config
   { apiKey = key
-  , model = "gpt-4-turbo-preview"
-  , temperature = 0.7
+  , model = "gpt-4o"
+  , temperature = 0
   } 
