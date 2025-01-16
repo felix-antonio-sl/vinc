@@ -7,9 +7,8 @@ if [ ! -f .env ]; then
     exit 1
 fi
 
-# Lee y exporta las variables de entorno
-while IFS='=' read -r key value
-do
+# Lee y exporta las variables de entorno, manejando la última línea sin nueva línea
+while IFS='=' read -r key value || [ -n "$key" ]; do
     # Elimina espacios y comillas
     value=$(echo "$value" | sed -e 's/^[[:space:]]*//' \
                                -e 's/[[:space:]]*$//' \
