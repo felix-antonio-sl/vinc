@@ -2287,109 +2287,246 @@
     </script>
 
     <!-- Anexo 7 -->
-     <!-- Anexo N°7 -->
-<div id="anexo7" class="container">
-  <h1>ANEXO N°7 (OBLIGATORIO)</h1>
-  <h2>INFORME DE ACTIVIDADES DE PRODUCCIÓN Y DIFUSIÓN</h2>
-  <p>Corresponde al informe de actividades realizadas en el marco de producción y difusión, incluyendo detalles de proveedores, servicios contratados y medios utilizados.</p>
-  <form action="#" method="POST" enctype="multipart/form-data">
-      <h3>Datos Generales:</h3>
-      <div class="form-group">
-          <label for="codigo_fndr">Código FNDR<span class="required"></span></label>
-          <input type="text" id="codigo_fndr" name="codigo_fndr" required>
-      </div>
-      <div class="form-group">
-          <label for="institucion_responsable">Institución responsable<span class="required"></span></label>
-          <input type="text" id="institucion_responsable" name="institucion_responsable" required>
-      </div>
-      <hr>
-      <h3>Actividades de Producción y Difusión:</h3>
-      <div id="actividades-difusion-container">
+    <!-- Anexo N°7 -->
+    <div id="anexo7" class="container">
+      <h1>ANEXO N°7 (OBLIGATORIO)</h1>
+      <h2>INFORME DE ACTIVIDADES DE PRODUCCIÓN Y DIFUSIÓN</h2>
+      <p>
+        Corresponde al informe de actividades realizadas en el marco de
+        producción y difusión, incluyendo detalles de proveedores, servicios
+        contratados y medios utilizados.
+      </p>
+      <form action="#" method="POST" enctype="multipart/form-data">
+        <h3>Datos Generales:</h3>
+        <div class="form-group">
+          <label for="codigo_fndr"
+            >Código FNDR<span class="required"></span
+          ></label>
+          <input type="text" id="codigo_fndr" name="codigo_fndr" required />
+        </div>
+        <div class="form-group">
+          <label for="institucion_responsable"
+            >Institución responsable<span class="required"></span
+          ></label>
+          <input
+            type="text"
+            id="institucion_responsable"
+            name="institucion_responsable"
+            required
+          />
+        </div>
+        <hr />
+        <h3>Actividades de Producción y Difusión:</h3>
+        <div id="actividades-difusion-container">
           <div class="actividad-difusion">
-              <div class="section-header">
-                  <h4>Actividad 1</h4>
-                  <button type="button" class="remove-section-btn" onclick="eliminarActividad(this)">Eliminar</button>
+            <div class="section-header">
+              <h4>Actividad 1</h4>
+              <button
+                type="button"
+                class="remove-section-btn"
+                onclick="eliminarActividad(this)"
+              >
+                Eliminar
+              </button>
+            </div>
+            <div class="form-group">
+              <label for="nombre_actividad[]"
+                >Nombre de la Actividad<span class="required"></span
+              ></label>
+              <input type="text" name="nombre_actividad[]" required />
+            </div>
+            <div class="form-group">
+              <label for="fecha_actividad[]"
+                >Fecha de realización<span class="required"></span
+              ></label>
+              <input type="date" name="fecha_actividad[]" required />
+            </div>
+            <div class="form-group">
+              <label for="descripcion_actividad[]"
+                >Descripción de la actividad<span class="required"></span
+              ></label>
+              <textarea
+                name="descripcion_actividad[]"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <h4>Proveedores y Servicios Contratados:</h4>
+            <table class="proveedores-table">
+              <thead>
+                <tr>
+                  <th>Nombre del Proveedor</th>
+                  <th>RUT</th>
+                  <th>Servicio Prestado</th>
+                  <th>Monto ($)</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" name="proveedor_nombre_0[]" required />
+                  </td>
+                  <td>
+                    <input type="text" name="proveedor_rut_0[]" required />
+                  </td>
+                  <td>
+                    <input type="text" name="proveedor_servicio_0[]" required />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="proveedor_monto_0[]"
+                      min="0"
+                      step="0.01"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="remove-row-btn"
+                      onclick="eliminarFila(this)"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <button
+              type="button"
+              class="add-row-btn"
+              onclick="agregarFilaProveedor(this)"
+            >
+              Agregar Proveedor
+            </button>
+            <h4>Medios de Difusión Utilizados:</h4>
+            <div class="form-group">
+              <label for="medios_difusion[]"
+                >Seleccione los medios de difusión utilizados:</label
+              >
+              <div class="checkbox-group">
+                <label
+                  ><input
+                    type="checkbox"
+                    name="medios_difusion_0[]"
+                    value="Radio"
+                  />
+                  Radio</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    name="medios_difusion_0[]"
+                    value="Televisión"
+                  />
+                  Televisión</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    name="medios_difusion_0[]"
+                    value="Prensa Escrita"
+                  />
+                  Prensa Escrita</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    name="medios_difusion_0[]"
+                    value="Redes Sociales"
+                  />
+                  Redes Sociales</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    name="medios_difusion_0[]"
+                    value="Otro"
+                  />
+                  Otro</label
+                >
               </div>
-              <div class="form-group">
-                  <label for="nombre_actividad[]">Nombre de la Actividad<span class="required"></span></label>
-                  <input type="text" name="nombre_actividad[]" required>
-              </div>
-              <div class="form-group">
-                  <label for="fecha_actividad[]">Fecha de realización<span class="required"></span></label>
-                  <input type="date" name="fecha_actividad[]" required>
-              </div>
-              <div class="form-group">
-                  <label for="descripcion_actividad[]">Descripción de la actividad<span class="required"></span></label>
-                  <textarea name="descripcion_actividad[]" rows="4" required></textarea>
-              </div>
-              <h4>Proveedores y Servicios Contratados:</h4>
-              <table class="proveedores-table">
-                  <thead>
-                      <tr>
-                          <th>Nombre del Proveedor</th>
-                          <th>RUT</th>
-                          <th>Servicio Prestado</th>
-                          <th>Monto ($)</th>
-                          <th>Acciones</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td><input type="text" name="proveedor_nombre_0[]" required></td>
-                          <td><input type="text" name="proveedor_rut_0[]" required></td>
-                          <td><input type="text" name="proveedor_servicio_0[]" required></td>
-                          <td><input type="number" name="proveedor_monto_0[]" min="0" step="0.01" required></td>
-                          <td><button type="button" class="remove-row-btn" onclick="eliminarFila(this)">Eliminar</button></td>
-                      </tr>
-                  </tbody>
-              </table>
-              <button type="button" class="add-row-btn" onclick="agregarFilaProveedor(this)">Agregar Proveedor</button>
-              <h4>Medios de Difusión Utilizados:</h4>
-              <div class="form-group">
-                  <label for="medios_difusion[]">Seleccione los medios de difusión utilizados:</label>
-                  <div class="checkbox-group">
-                      <label><input type="checkbox" name="medios_difusion_0[]" value="Radio"> Radio</label>
-                      <label><input type="checkbox" name="medios_difusion_0[]" value="Televisión"> Televisión</label>
-                      <label><input type="checkbox" name="medios_difusion_0[]" value="Prensa Escrita"> Prensa Escrita</label>
-                      <label><input type="checkbox" name="medios_difusion_0[]" value="Redes Sociales"> Redes Sociales</label>
-                      <label><input type="checkbox" name="medios_difusion_0[]" value="Otro"> Otro</label>
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label for="evidencia_difusion[]">Adjuntar evidencia de la difusión realizada<span class="required"></span></label>
-                  <input type="file" name="evidencia_difusion_0[]" accept="image/*,application/pdf,audio/*,video/*" multiple required>
-                  <small>Puede adjuntar imágenes, documentos PDF, audios o videos.</small>
-              </div>
+            </div>
+            <div class="form-group">
+              <label for="evidencia_difusion[]"
+                >Adjuntar evidencia de la difusión realizada<span
+                  class="required"
+                ></span
+              ></label>
+              <input
+                type="file"
+                name="evidencia_difusion_0[]"
+                accept="image/*,application/pdf,audio/*,video/*"
+                multiple
+                required
+              />
+              <small
+                >Puede adjuntar imágenes, documentos PDF, audios o
+                videos.</small
+              >
+            </div>
           </div>
-      </div>
-      <button type="button" class="add-section-btn" onclick="agregarActividadDifusion()">Agregar Actividad</button>
-      <hr>
-      <p><strong>Nota:</strong> Adjunte las copias necesarias para completar la totalidad de la entrega.</p>
-      <div class="form-group">
-          <label for="nombre_representante_legal">Nombre representante legal<span class="required"></span></label>
-          <input type="text" id="nombre_representante_legal" name="nombre_representante_legal" required>
-      </div>
-      <div class="form-group">
-          <label for="firma_timbre">Firma y Timbre<span class="required"></span></label>
-          <input type="file" id="firma_timbre" name="firma_timbre" accept="image/*,application/pdf" required>
+        </div>
+        <button
+          type="button"
+          class="add-section-btn"
+          onclick="agregarActividadDifusion()"
+        >
+          Agregar Actividad
+        </button>
+        <hr />
+        <p>
+          <strong>Nota:</strong> Adjunte las copias necesarias para completar la
+          totalidad de la entrega.
+        </p>
+        <div class="form-group">
+          <label for="nombre_representante_legal"
+            >Nombre representante legal<span class="required"></span
+          ></label>
+          <input
+            type="text"
+            id="nombre_representante_legal"
+            name="nombre_representante_legal"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="firma_timbre"
+            >Firma y Timbre<span class="required"></span
+          ></label>
+          <input
+            type="file"
+            id="firma_timbre"
+            name="firma_timbre"
+            accept="image/*,application/pdf"
+            required
+          />
           <small>Suba su firma y timbre en formato JPG, PNG o PDF</small>
-      </div>
-      <hr>
-      <button type="submit" class="submit-btn">Enviar Informe de Actividades de Difusión</button>
-  </form>
-</div>
+        </div>
+        <hr />
+        <button type="submit" class="submit-btn">
+          Enviar Informe de Actividades de Difusión
+        </button>
+      </form>
+    </div>
 
-<script>
-  let actividadDifusionIndex = 0;
+    <script>
+      let actividadDifusionIndex = 0;
 
-  function agregarActividadDifusion() {
-      actividadDifusionIndex++;
-      const actividadesContainer = document.getElementById('actividades-difusion-container');
-      const actividadCount = actividadesContainer.getElementsByClassName('actividad-difusion').length + 1;
+      function agregarActividadDifusion() {
+        actividadDifusionIndex++;
+        const actividadesContainer = document.getElementById(
+          "actividades-difusion-container"
+        );
+        const actividadCount =
+          actividadesContainer.getElementsByClassName("actividad-difusion")
+            .length + 1;
 
-      const actividadDiv = document.createElement('div');
-      actividadDiv.classList.add('actividad-difusion');
-      actividadDiv.innerHTML = `
+        const actividadDiv = document.createElement("div");
+        actividadDiv.classList.add("actividad-difusion");
+        actividadDiv.innerHTML = `
           <div class="section-header">
               <h4>Actividad ${actividadCount}</h4>
               <button type="button" class="remove-section-btn" onclick="eliminarActividad(this)">Eliminar</button>
@@ -2445,50 +2582,300 @@
               <small>Puede adjuntar imágenes, documentos PDF, audios o videos.</small>
           </div>
       `;
-      actividadesContainer.appendChild(actividadDiv);
-      actualizarActividadHeaders();
-  }
-
-  function eliminarActividad(button) {
-      const actividadDiv = button.parentElement.parentElement;
-      actividadDiv.remove();
-      actualizarActividadHeaders();
-  }
-
-  function actualizarActividadHeaders() {
-      const actividades = document.getElementById('actividades-difusion-container').getElementsByClassName('actividad-difusion');
-      for (let i = 0; i < actividades.length; i++) {
-          const header = actividades[i].querySelector('.section-header h4');
-          header.textContent = `Actividad ${i + 1}`;
+        actividadesContainer.appendChild(actividadDiv);
+        actualizarActividadHeaders();
       }
-  }
 
-  function agregarFilaProveedor(button) {
-      const proveedoresTable = button.previousElementSibling;
-      const tbody = proveedoresTable.querySelector('tbody');
-      const actividadDiv = button.closest('.actividad-difusion');
-      const actividadTables = Array.from(document.getElementById('actividades-difusion-container').getElementsByClassName('actividad-difusion'));
-      const actividadIndexLocal = actividadTables.indexOf(actividadDiv);
-      const newRow = document.createElement('tr');
+      function eliminarActividad(button) {
+        const actividadDiv = button.parentElement.parentElement;
+        actividadDiv.remove();
+        actualizarActividadHeaders();
+      }
 
-      newRow.innerHTML = `
+      function actualizarActividadHeaders() {
+        const actividades = document
+          .getElementById("actividades-difusion-container")
+          .getElementsByClassName("actividad-difusion");
+        for (let i = 0; i < actividades.length; i++) {
+          const header = actividades[i].querySelector(".section-header h4");
+          header.textContent = `Actividad ${i + 1}`;
+        }
+      }
+
+      function agregarFilaProveedor(button) {
+        const proveedoresTable = button.previousElementSibling;
+        const tbody = proveedoresTable.querySelector("tbody");
+        const actividadDiv = button.closest(".actividad-difusion");
+        const actividadTables = Array.from(
+          document
+            .getElementById("actividades-difusion-container")
+            .getElementsByClassName("actividad-difusion")
+        );
+        const actividadIndexLocal = actividadTables.indexOf(actividadDiv);
+        const newRow = document.createElement("tr");
+
+        newRow.innerHTML = `
           <td><input type="text" name="proveedor_nombre_${actividadIndexLocal}[]" required></td>
           <td><input type="text" name="proveedor_rut_${actividadIndexLocal}[]" required></td>
           <td><input type="text" name="proveedor_servicio_${actividadIndexLocal}[]" required></td>
           <td><input type="number" name="proveedor_monto_${actividadIndexLocal}[]" min="0" step="0.01" required></td>
           <td><button type="button" class="remove-row-btn" onclick="eliminarFila(this)">Eliminar</button></td>
       `;
-      tbody.appendChild(newRow);
-  }
+        tbody.appendChild(newRow);
+      }
 
-  function eliminarFila(button) {
-      const row = button.parentElement.parentElement;
-      row.parentElement.removeChild(row);
-  }
-</script>
+      function eliminarFila(button) {
+        const row = button.parentElement.parentElement;
+        row.parentElement.removeChild(row);
+      }
+    </script>
 
     <!-- Anexo 8 -->
+    <div class="container">
+      <h1>ANEXO N°8 (OBLIGATORIO)</h1>
+      <h2>INFORME FINAL DE GESTIÓN</h2>
 
+      <form action="#" method="POST">
+        <h3>Objetivos del Proyecto:</h3>
+        <div class="form-group">
+          <p>
+            En opinión de la institución, ¿se logró dar cumplimiento a los
+            objetivos del proyecto?
+          </p>
+          <div class="radio-group">
+            <label>
+              <input
+                type="radio"
+                name="cumplimiento_objetivos"
+                value="si"
+                required
+              />
+              Sí
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="cumplimiento_objetivos"
+                value="no"
+                required
+              />
+              No
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="detalle_objetivos"
+            >Detalle y fundamento de la respuesta anterior
+            <span class="required"></span
+          ></label>
+          <textarea
+            id="detalle_objetivos"
+            name="detalle_objetivos"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <hr />
+
+        <h3>Beneficiarios:</h3>
+        <div class="form-group">
+          <label
+            >Detalle el número de beneficiarios directos de la ejecución de la
+            iniciativa (debe estar acorde a la lista de asistencia y otros
+            medios de verificación):</label
+          >
+          <div class="form-group">
+            <label for="beneficiarios_mujeres">Mujeres:</label>
+            <input
+              type="number"
+              id="beneficiarios_mujeres"
+              name="beneficiarios_mujeres"
+              min="0"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="beneficiarios_hombres">Hombres:</label>
+            <input
+              type="number"
+              id="beneficiarios_hombres"
+              name="beneficiarios_hombres"
+              min="0"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="beneficiarios_total">Total de beneficiarios:</label>
+            <input
+              type="number"
+              id="beneficiarios_total"
+              name="beneficiarios_total"
+              min="0"
+              readonly
+            />
+          </div>
+        </div>
+
+        <hr />
+
+        <h3>Observaciones, Sugerencias y Comentarios Finales:</h3>
+        <div class="form-group">
+          <label for="observaciones"
+            >Realice cualquier tipo de observación, sugerencias, manifieste
+            cuáles fueron las principales dificultades para la realización del
+            proyecto, principales logros, entre otros comentarios.
+            <span class="required"></span
+          ></label>
+          <textarea
+            id="observaciones"
+            name="observaciones"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <hr />
+
+        <h3>
+          Evaluación relación Gobierno Regional de Ñuble - Institución
+          beneficiaria:
+        </h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterios</th>
+              <th>Nota (1 a 7)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                1. Oportuna convocatoria a las actividades de capacitación
+              </td>
+              <td>
+                <input
+                  type="number"
+                  name="criterio1"
+                  min="1"
+                  max="7"
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                2. Calidad de la información entregada durante el proceso de
+                postulación
+              </td>
+              <td>
+                <input
+                  type="number"
+                  name="criterio2"
+                  min="1"
+                  max="7"
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                3. Rapidez en la respuesta entregada por los profesionales a las
+                consultas formuladas
+              </td>
+              <td>
+                <input
+                  type="number"
+                  name="criterio3"
+                  min="1"
+                  max="7"
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                4. Disposición para responder dudas durante el proceso de
+                ejecución y rendición
+              </td>
+              <td>
+                <input
+                  type="number"
+                  name="criterio4"
+                  min="1"
+                  max="7"
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                5. Comunicación con el Gobierno Regional para la coordinación de
+                actividad de lanzamiento/cierre
+              </td>
+              <td>
+                <input
+                  type="number"
+                  name="criterio5"
+                  min="1"
+                  max="7"
+                  required
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr />
+
+        <div class="form-group">
+          <label for="nombre_representante_legal"
+            >Nombre representante legal <span class="required"></span
+          ></label>
+          <input
+            type="text"
+            id="nombre_representante_legal"
+            name="nombre_representante_legal"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="firma_timbre"
+            >Firma y Timbre <span class="required"></span
+          ></label>
+          <input
+            type="file"
+            id="firma_timbre"
+            name="firma_timbre"
+            accept="image/*,application/pdf"
+            required
+          />
+          <small class="small-text"
+            >Suba su firma y timbre en formato JPG, PNG o PDF</small
+          >
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Enviar Informe Final de Gestión
+        </button>
+      </form>
+    </div>
+
+    <script>
+      // Calcula el total de beneficiarios cuando cambian los valores de mujeres u hombres
+      const mujeresInput = document.getElementById("beneficiarios_mujeres");
+      const hombresInput = document.getElementById("beneficiarios_hombres");
+      const totalInput = document.getElementById("beneficiarios_total");
+
+      function calcularTotal() {
+        const mujeres = parseInt(mujeresInput.value) || 0;
+        const hombres = parseInt(hombresInput.value) || 0;
+        totalInput.value = mujeres + hombres;
+      }
+
+      mujeresInput.addEventListener("input", calcularTotal);
+      hombresInput.addEventListener("input", calcularTotal);
+    </script>
     <!-- Shared JavaScript -->
     <script>
       // Combined JavaScript functions
